@@ -1,4 +1,4 @@
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 13:31:23 PAGE 1   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 14:47:58 PAGE 1   
 
 
 C51 COMPILER V9.57.0.0, COMPILATION OF MODULE XUNJI
@@ -28,7 +28,7 @@ line level    source
   17            // Mode 1
   18            // 完全跟线走，稍慢, 表现良好
   19            // 6T 模式下动不了 
-  20            { 65536 - 200,  5,5,  1,5,0,5,  5,1,5,0,  12500,12000 },
+  20            { 65536 - 200,  6,6,  4,6,3,6,  6,4,6,3,  12500,12000 },
   21          
   22            // Mode 2
   23            // 完全根线，小弯大弯表现良好，修复能力强，表现优秀
@@ -62,7 +62,7 @@ line level    source
   51          unsigned char turn_configs[] = {LEFT,RIGHT,STRAIGHT,RIGHT,LEFT};
   52          unsigned char current_time_config_index = 0;
   53          unsigned char current_schdule_config = 0;
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 13:31:23 PAGE 2   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 14:47:58 PAGE 2   
 
   54          unsigned char current_turn_config = 0;
   55          unsigned char mode_low = 0;
@@ -126,7 +126,7 @@ line level    source
  113   2      
  114   2            case 2:
  115   2              set_display(current_turn_config);
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 13:31:23 PAGE 3   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 14:47:58 PAGE 3   
 
  116   2              break;
  117   2            
@@ -190,7 +190,7 @@ line level    source
  175   1        // T2CON = 0;  //0000 0000   ;定时器2配置为16位自动重装定时器
  176   1        // RCAP2H = _iror_(65536-250,8);
  177   1        // RCAP2L = 65536-250;
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 13:31:23 PAGE 4   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 14:47:58 PAGE 4   
 
  178   1        // TH2 = _iror_(65536-250,8);
  179   1        // TL2 = 65536-250;
@@ -254,7 +254,7 @@ line level    source
  237          void turn_left_max() // 大幅度左修正
  238          {
  239   1        
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 13:31:23 PAGE 5   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 14:47:58 PAGE 5   
 
  240   1        if((runtime>tune_time)&&(current_time_config_index!=mode_low)){
  241   2          load_time_config(mode_low);
@@ -318,7 +318,7 @@ line level    source
  299          
  300          void stop()
  301          {
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 13:31:23 PAGE 6   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 14:47:58 PAGE 6   
 
  302   1        unsigned int i,j=0;
  303   1        // 防止中断函数导致停止失败
@@ -382,7 +382,7 @@ line level    source
  361   1        pro_left = 0;
  362   1        pro_right = 0;
  363   1        IN1_1 = 0;
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 13:31:23 PAGE 7   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 14:47:58 PAGE 7   
 
  364   1        IN1_2 = 0;
  365   1        IN2_1 = 0;
@@ -446,7 +446,7 @@ line level    source
  423   1        A=BX=C=D=E=F=G=0;
  424   1        A = display&0x01;
  425   1        BX = display&0x02;
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 13:31:23 PAGE 8   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 14:47:58 PAGE 8   
 
  426   1        C = display&0x04;
  427   1        D = display&0x08;

@@ -102,9 +102,9 @@ extern struct schdule_config{
 };
 //typedef struct schdule_config schdule_config;
 extern struct time_config *current_time_config;
+extern unsigned char current_time_config_index;
 extern code struct schdule_config schdule_configs[];
 extern code struct time_config speed_level_configs[];
-extern unsigned char current_time_config_index;
 extern unsigned char current_schdule_config;
 extern unsigned char display_cache;
 extern unsigned char turn_configs[];

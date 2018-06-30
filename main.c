@@ -59,7 +59,8 @@ void T1_time() interrupt 3   //T1定时中断函数
 {
 	TR1=0; 
 	infrared();
-	TH1=((*current_time_config).sensitivity)>>8;                 //12M，定时1.5ms
+	//12M，定时1.5ms
+	TH1=((*current_time_config).sensitivity)>>8;
 	TL1=(*current_time_config).sensitivity;	
 	TR1=1;
 }
