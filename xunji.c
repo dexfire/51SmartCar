@@ -13,7 +13,7 @@ unsigned char display;
 code struct time_config speed_level_configs[] = {
 	
 	/* 单独一个轮子拐弯可能拖不动 */
-	
+
 	// Mode 1
 	// 完全跟线走，稍慢, 表现良好
 	// 6T 模式下动不了 
@@ -48,6 +48,7 @@ code struct schdule_config schdule_configs[] = {
 	{3,1},
 	{4,1},
 };
+
 unsigned char turn_configs[] = {
 	// 比赛顺序
 	//LEFT,RIGHT,STRAIGHT,RIGHT,LEFT
@@ -56,6 +57,7 @@ unsigned char turn_configs[] = {
 	LEFT,
 	RIGHT
 };
+
 unsigned char current_time_config_index = 0;
 unsigned char current_schdule_config = 0;
 unsigned char current_turn_config = 0;
@@ -367,10 +369,7 @@ void wait() //暂停
 	runtime = 0;
 	pro_left = 0;
 	pro_right = 0;
-	IN1_1 = 0;
-	IN1_2 = 0;
-	IN2_1 = 0;
-	IN2_2 = 0;
+	IN1_1 = IN1_2 = IN2_1 = IN2_2 = 0;
 }
 /**
  *		循迹1、2、3、4 对应 左、左中、右中、右
@@ -406,19 +405,19 @@ void infrared() //循迹
 // PWM 输出
 void output()    //电机输出函数
 {
-	if(time >= 20)
+	if(time > 19)
 	{
 		time = 0;
-		IN1_1 = 1;    //左电机正转
-		IN1_2 = 0;
-		IN2_1 = 1;    //右电机正转
-		IN2_2 = 0;
+		// 直行
+		IN1_1 = IN2_1= 1;
+		IN1_2 = IN2_2 = 0;
 		// 计时器 20*100us = 2 ms
+		// 清零防止 tune_time > runtime 导致模式不能切换 
 		if(runtime++==0)tune_time=0;
 	}
 	
-	if(time >= pro_left)		IN1_1 = 0;
-	if(time >= pro_right)		IN2_1 = 0;
+	if(time == pro_left)		IN1_1 = 0;
+	if(time == pro_right)		IN2_1 = 0;
 	
 }
 
