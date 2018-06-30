@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "xunji.h": "c",
-        "intrin.h": "c"
+        "intrin.h": "c",
+        "stdio.h": "c",
+        "cstdio": "c"
     }
 }

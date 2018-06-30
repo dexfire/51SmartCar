@@ -2,6 +2,7 @@
 //#include "oled.h"
 //#include "bmp.h"
 #include "xunji.h"
+#include <stdio.h>
 //#include "eeprom.h"
 
 unsigned char time = 0;
@@ -13,11 +14,10 @@ code struct time_config speed_level_configs[] = {
 	
 	/* 单独一个轮子拐弯可能拖不动 */
 	
-	
 	// Mode 1
 	// 完全跟线走，稍慢, 表现良好
 	// 6T 模式下动不了 
-	{ 65536 - 200,	6,6,  4,6,3,6,	6,4,6,3,	12500,12000 },
+	{ 65536 - 200,	5,5,  3,5,2,5,	5,3,5,2,	12500,12000 },
 
 	// Mode 2
 	// 完全根线，小弯大弯表现良好，修复能力强，表现优秀
@@ -41,12 +41,12 @@ code struct time_config speed_level_configs[] = {
 };
 
 code struct schdule_config schdule_configs[] = {
-	{1,2},
-	{1,3},
-	{1,4},
-	{0,2},
-	{0,3},
-	{0,4},
+	{2,0},
+	{3,0},
+	{4,0},
+	{2,1},
+	{3,1},
+	{4,1},
 };
 unsigned char turn_configs[] = {
 	// 比赛顺序
@@ -443,7 +443,6 @@ void load_time_config(char idx){
 	current_time_config = &speed_level_configs + current_time_config_index;
 	set_display(current_time_config_index+1);
 }
-
 
 // 检测轮子状态
 void get_wheel_steps(){

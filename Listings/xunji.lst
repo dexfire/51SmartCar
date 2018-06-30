@@ -1,4 +1,4 @@
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:05:30 PAGE 1   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:44:17 PAGE 1   
 
 
 C51 COMPILER V9.57.0.0, COMPILATION OF MODULE XUNJI
@@ -62,7 +62,7 @@ line level    source
   51          unsigned char turn_configs[] = {
   52            // 比赛顺序
   53            //LEFT,RIGHT,STRAIGHT,RIGHT,LEFT
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:05:30 PAGE 2   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:44:17 PAGE 2   
 
   54            RIGHT,
   55            LEFT,
@@ -126,7 +126,7 @@ line level    source
  113          void key_control()
  114          {
  115   1        switch(key_scan()) 
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:05:30 PAGE 3   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:44:17 PAGE 3   
 
  116   1          {
  117   2            case 1:
@@ -190,7 +190,7 @@ line level    source
  175   1        TR0=0;
  176   1      
  177   1        TH1=(65536-1000)>>8;                 //12M，定时2ms
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:05:30 PAGE 4   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:44:17 PAGE 4   
 
  178   1        TL1=65536-1000;
  179   1        ET1=1;
@@ -254,7 +254,7 @@ line level    source
  237   1      //    tune_time = runtime + ADJUST_TIME_SHORT;
  238   1      //  }else{
  239   1      //    pro_left  = (*current_time_config).lturn_right;
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:05:30 PAGE 5   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:44:17 PAGE 5   
 
  240   1      //    pro_right = (*current_time_config).rturn_right;
  241   1      //  }
@@ -318,7 +318,7 @@ line level    source
  299   1        {
  300   2          if(i%4) IN1_1 = 1,IN2_1 =1;   //降低速度,便于控制
  301   2          else IN1_1 = 0,IN2_1 =0;
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:05:30 PAGE 6   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:44:17 PAGE 6   
 
  302   2        }
  303   1        IN1_1 = 0;
@@ -382,7 +382,7 @@ line level    source
  361          void wait() //暂停
  362          {
  363   1        TR1 = 0;
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:05:30 PAGE 7   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:44:17 PAGE 7   
 
  364   1        TR0 = 0;
  365   1        time = 0;
@@ -446,7 +446,7 @@ line level    source
  423   1      }
  424          
  425          void set_display(unsigned char digit){
-C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:05:30 PAGE 8   
+C51 COMPILER V9.57.0.0   XUNJI                                                             06/30/2018 21:44:17 PAGE 8   
 
  426   1        display = segdata [digit%10];
  427   1      }
