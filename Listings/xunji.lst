@@ -1,4 +1,4 @@
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:09:04 PAGE 1   
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:24:30 PAGE 1   
 
 
 C51 COMPILER V9.57.0.0, COMPILATION OF MODULE XUNJI
@@ -62,7 +62,7 @@ line level    source
   51            {5,5,  1,5,0,5, 5,1,5,0  ,12000,12000 },
   52          
   53            // Mode 3
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:09:04 PAGE 2   
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:24:30 PAGE 2   
 
   54            // 大弯修复能力弱，走着走着就偏了
   55            //{6,6,  1,5,0,5, 5,1,5,0,12000,12000 },
@@ -71,13 +71,13 @@ line level    source
   58          
   59            // Mode 4
   60            // 6T 模式下工作良好，表现很好   12T 也还可以
-  61            {9,9,  3,5,0,5, 5,3,5,0,12000,12000 },
+  61            {9,9,  0,4,0,5, 4,0,5,0, 12000,12000 },
   62          
   63            // Mode 5
   64            // 高速，拐弯溢出边界
   65            //{15,15,  2,7,1,7, 7,2,7,1,12000,12000 },
   66            // 尝试再次降低修正幅度   效果还可以   稳定性差
-  67            {13,13,  5,7,3,7, 7,5,7,3,12000,12000 },
+  67            {13,13,  4,7,2,7, 7,4,7,2,12000,12000 },
   68          };
   69          
   70          code struct schdule_config schdule_configs[] = {
@@ -126,7 +126,7 @@ line level    source
  113   2          if(!R2) {while(!R2);BUZZER=1;return 3;}
  114   2        }
  115   1        C0=1;
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:09:04 PAGE 3   
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:24:30 PAGE 3   
 
  116   1        
  117   1        C1=0;
@@ -190,7 +190,7 @@ line level    source
  175   3              // set_display(page);
  176   3              // break;
  177   3            }
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:09:04 PAGE 4   
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:24:30 PAGE 4   
 
  178   2            // 开始、暂停、继续
  179   2            case 9:
@@ -254,7 +254,7 @@ line level    source
  237   2          if(current_time_config_index!=mode_high)
  238   2            load_time_config(mode_high);
  239   2        }else{
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:09:04 PAGE 5   
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:24:30 PAGE 5   
 
  240   2          pro_left  = (*current_time_config).lstraight;
  241   2          pro_right = (*current_time_config).rstraight;
@@ -318,7 +318,7 @@ line level    source
  299   2        }
  300   1      }
  301          
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:09:04 PAGE 6   
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:24:30 PAGE 6   
 
  302          //左转90度
  303          void turn_left_90() 
@@ -382,7 +382,7 @@ line level    source
  361           *    3、判断应该【到终点、左90°转、右90转、直行】
  362           *    4、结束后恢复定时器
  363           */
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:09:04 PAGE 7   
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:24:30 PAGE 7   
 
  364          void crossroad()
  365          {
@@ -446,7 +446,7 @@ line level    source
  423   1        //中间
  424   1        else if(XUNJI_2 && XUNJI_3)
  425   1          straight();
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:09:04 PAGE 8   
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:24:30 PAGE 8   
 
  426   1        //偏右 (注：在严重偏右后面，即不发生严重偏右)
  427   1        else if(XUNJI_2)
@@ -510,7 +510,7 @@ line level    source
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =   1182    ----
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:09:04 PAGE 9   
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 01:24:30 PAGE 9   
 
    CONSTANT SIZE    =     92    ----
    XDATA SIZE       =   ----    ----

@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    07/01/2018  01:09:04  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    07/01/2018  01:24:30  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
@@ -59,7 +59,7 @@ LINK MAP OF MODULE:  .\Objects\51car (MAIN)
             CODE    05DAH     002EH     UNIT         ?PR?SET_DISPLAY_NOW?XUNJI
             CODE    0608H     002AH     UNIT         ?PR?STRAIGHT?XUNJI
             CODE    0632H     0024H     UNIT         ?PR?GO_STRAIGHT?XUNJI
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:09:04  PAGE 2
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:24:30  PAGE 2
 
 
             CODE    0656H     001CH     UNIT         ?PR?WAIT?XUNJI
@@ -119,7 +119,7 @@ SEGMENT                               DATA_GROUP
   +--> ?CO?XUNJI
 
 ?PR?TURN_LEFT_MAX?XUNJI             -----    -----
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:09:04  PAGE 3
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:24:30  PAGE 3
 
 
   +--> ?PR?_LOAD_TIME_CONFIG?XUNJI
@@ -179,7 +179,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\51car (MAIN)
   D:00D0H         PUBLIC        PSW
   -------         PROC          MAIN
   C:000EH         LINE#         25
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:09:04  PAGE 4
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:24:30  PAGE 4
 
 
   C:000EH         LINE#         26
@@ -239,7 +239,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\51car (MAIN)
   B:0090H.1       PUBLIC        XUNJI_3
   B:0090H.0       PUBLIC        XUNJI_4
   C:06D7H         PUBLIC        _set_display
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:09:04  PAGE 5
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:24:30  PAGE 5
 
 
   D:0013H         PUBLIC        mode_high
@@ -299,7 +299,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\51car (MAIN)
   D:0020H         PUBLIC        current_time_config
   B:00A0H.6       PUBLIC        C2
   C:046EH         PUBLIC        turn_right_max
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:09:04  PAGE 6
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:24:30  PAGE 6
 
 
   D:0023H         PUBLIC        display
@@ -359,7 +359,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\51car (MAIN)
   C:0172H         LINE#         142
   C:0172H         LINE#         143
   C:0172H         LINE#         144
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:09:04  PAGE 7
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:24:30  PAGE 7
 
 
   C:0188H         LINE#         145
@@ -419,7 +419,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\51car (MAIN)
   C:04C9H         LINE#         223
   C:04CBH         LINE#         224
   C:04CDH         LINE#         225
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:09:04  PAGE 8
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:24:30  PAGE 8
 
 
   C:04CFH         LINE#         226
@@ -479,7 +479,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\51car (MAIN)
   C:049FH         LINE#         298
   C:04A7H         LINE#         299
   C:04A7H         LINE#         300
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:09:04  PAGE 9
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:24:30  PAGE 9
 
 
   -------         ENDPROC       TURN_RIGHT_MAX
@@ -539,7 +539,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\51car (MAIN)
   C:02CAH         LINE#         342
   C:02CAH         LINE#         343
   C:02CAH         LINE#         344
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:09:04  PAGE 10
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:24:30  PAGE 10
 
 
   C:02CFH         LINE#         346
@@ -599,7 +599,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\51car (MAIN)
   C:0516H         LINE#         412
   C:0516H         LINE#         413
   C:0516H         LINE#         415
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:09:04  PAGE 11
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:24:30  PAGE 11
 
 
   C:0522H         LINE#         416
@@ -659,7 +659,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\51car (MAIN)
   -------         DO            
   D:0008H         SYMBOL        last_left
   D:000AH         SYMBOL        last_right
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:09:04  PAGE 12
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  07/01/2018  01:24:30  PAGE 12
 
 
   -------         ENDDO         
