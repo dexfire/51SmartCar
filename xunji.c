@@ -17,27 +17,27 @@ code struct time_config speed_level_configs[] = {
 	// Mode 1
 	// 完全跟线走，稍慢, 表现良好
 	// 6T 模式下动不了 
-	{ 65536 - 250,	6,6,  4,6,3,6,	6,4,6,3,	12500,12000 },
+	{ 65536 - 200,	6,6,  4,6,3,6,	6,4,6,3,	12500,12000 },
 
 	// Mode 2
 	// 完全根线，小弯大弯表现良好，修复能力强，表现优秀
-	{ 65536 - 250,	6,6,	3,6,2,6, 6,3,6,2,12500,12000 },
+	{ 65536 - 200,	6,6,	3,6,2,6, 6,3,6,2,12500,12000 },
 
 	// Mode 3
 	// 大弯修复能力弱，走着走着就偏了
 	//{6,6,  1,5,0,5, 5,1,5,0,12000,12000 },
 	// 尝试减小偏转力度
-	{ 65536 - 250,6,6,  1,4,0,4, 4,1,4,0,12000,12000 },
+	{ 65536 - 200,6,6,  1,4,0,4, 4,1,4,0,12000,12000 },
 
 	// Mode 4
 	// 6T 模式下工作良好，表现很好   12T 也还可以
-	{ 65536 - 250,9,9,  3,5,0,5, 5,3,5,0,12000,12000 },
+	{ 65536 - 200,9,9,  3,5,0,5, 5,3,5,0,12000,12000 },
 
 	// Mode 5
 	// 高速，拐弯溢出边界
 	//{15,15,  2,7,1,7, 7,2,7,1,12000,12000 },
 	// 尝试再次降低修正幅度   效果还可以   稳定性差
-	{ 65536 - 250,13,13,  5,7,3,7, 7,5,7,3,12000,12000 },
+	{ 65536 - 200,13,13,  5,7,3,7, 7,5,7,3,12000,12000 },
 };
 
 code struct schdule_config schdule_configs[] = {
@@ -48,7 +48,14 @@ code struct schdule_config schdule_configs[] = {
 	{0,3},
 	{0,4},
 };
-unsigned char turn_configs[] = {LEFT,RIGHT,STRAIGHT,RIGHT,LEFT};
+unsigned char turn_configs[] = {
+	// 比赛顺序
+	//LEFT,RIGHT,STRAIGHT,RIGHT,LEFT
+	RIGHT,
+	LEFT,
+	LEFT,
+	RIGHT
+};
 unsigned char current_time_config_index = 0;
 unsigned char current_schdule_config = 0;
 unsigned char current_turn_config = 0;
@@ -433,7 +440,7 @@ void set_display_now(){
 // 读取预设参数，快速设置参数
 void load_time_config(char idx){
 	current_time_config_index = idx;
-	current_time_config = speed_level_configs + current_time_config_index;
+	current_time_config = &speed_level_configs + current_time_config_index;
 	set_display(current_time_config_index+1);
 }
 
