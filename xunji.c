@@ -44,7 +44,7 @@ code struct time_config speed_level_configs[] = {
 	// Mode 1
 	// 完全跟线走，稍慢, 表现良好
 	// 6T 模式下动不了 
-	{4,4,  1,4,0,4,	4,1,4,0,	12000,12000 },
+	{4,4,  2,4,1,4,	4,2,4,1,	12000,12000 },
 
 	// Mode 2
 	// 完全根线，小弯大弯表现良好，修复能力强，表现优秀
@@ -224,8 +224,9 @@ void init()
 	IN1_2 = 0;
 	IN2_1 = 0;
 	IN2_2 = 0;
+	current_time_config = &speed_level_configs[0];
 	//eeprom_init();
-	//set_display(eeprom_read_byte(0));
+	set_display(0);
 }
 
 void straight() //走直线
@@ -234,7 +235,7 @@ void straight() //走直线
 	// 由于比较耗时，所以判断一下当前模式是值得的
 	if(runtime > tune_time){
 		if(current_time_config_index!=mode_high)
-		load_time_config(mode_high);
+			load_time_config(mode_high);
 	}else{
 		pro_left  = (*current_time_config).lstraight;
 		pro_right = (*current_time_config).rstraight;
@@ -376,13 +377,12 @@ void crossroad()
 				go_straight();
 				TR0 = 1;   //开启T0中断
 				TR1 = 1;   //开启T1中断
-			}else{
+			}else if(turn_configs[current_turn_config]==STRAIGHT){
 				// 快速直行走出十字路口区域
 				go_straight();
 				TR0 = 1;   //开启T0中断
 				TR1 = 1;   //开启T1中断
 			}
-
 		}else{
 			stop();
 			current_turn_config = 0;
@@ -442,15 +442,15 @@ void output()
 	{
 		time = 0;
 		// 直行
-		IN1_1 = IN2_1 = 1;
-		IN1_2 = IN2_2 = 0;
+		IN1_1 =1; IN2_1 = 1;
+		IN1_2 =0; IN2_2 = 0;
 		// 计时器 20*100us = 2 ms
 		// 清零防止 tune_time > runtime 导致模式不能切换 
 		if(runtime++==0)tune_time=0;
 	}
 	
-	if(time == pro_left)		IN1_1 = 0;
-	if(time == pro_right)		IN2_1 = 0;
+	if(time == pro_left)	IN1_1 = 0;
+	if(time == pro_right)	IN2_1 = 0;
 }
 
 void set_display(unsigned char digit){
