@@ -1,5 +1,4 @@
 #include "xunji.h"
-#include <intrins.h>
 
 /**
  *		51循迹小车
@@ -59,11 +58,9 @@ void T0_time() interrupt 1     //T0定时中断函数
 void T1_time() interrupt 3   //T1定时中断函数
 {
 	TR1=0; 
-
 	infrared();
-	
-	TH1=_iror_(65536-(*current_time_config).sensitivity,8);                 //12M，定时1.5ms
-	TL1=(65536-(*current_time_config).sensitivity);	
+	TH1=((*current_time_config).sensitivity)>>8;                 //12M，定时1.5ms
+	TL1=(*current_time_config).sensitivity;	
 	TR1=1;
 }
 
