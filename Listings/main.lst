@@ -1,4 +1,4 @@
-C51 COMPILER V9.57.0.0   MAIN                                                              06/30/2018 22:20:06 PAGE 1   
+C51 COMPILER V9.57.0.0   MAIN                                                              07/01/2018 00:49:49 PAGE 1   
 
 
 C51 COMPILER V9.57.0.0, COMPILATION OF MODULE MAIN
@@ -55,40 +55,42 @@ line level    source
   45   1        TR0=0;                      //关闭T0中断
   46   1        time++;
   47   1        output();                  //输出
-  48   1        TR0=1;                //开启T0中断
-  49   1      }
-  50          
-  51          /**
-  52           *    定时器 1 中断函数
-  53           *    1、
-  54           * 
-C51 COMPILER V9.57.0.0   MAIN                                                              06/30/2018 22:20:06 PAGE 2   
+  48   1        TH0=(65536-TIMER0)/256;                 //12M，定时50us
+  49   1        TL0=(65536-TIMER0)%256;
+  50   1        TR0=1;                //开启T0中断
+  51   1      }
+  52          
+  53          /**
+  54           *    定时器 1 中断函数
+C51 COMPILER V9.57.0.0   MAIN                                                              07/01/2018 00:49:49 PAGE 2   
 
-  55           * 
-  56           */
-  57          
-  58          void T1_time() interrupt 3   //T1定时中断函数
-  59          {
-  60   1        TR1=0; 
-  61   1        infrared();
-  62   1        //12M，定时1.5ms
-  63   1        TH1=((*current_time_config).sensitivity)>>8;
-  64   1        TL1=(*current_time_config).sensitivity; 
-  65   1        TR1=1;
-  66   1      }
-  67          
-  68          // void T2_time() interrupt 5   //T2定时中断函数
-  69          // {
-  70          //  TF2 = 0;
-  71          //  runtime++;
-  72          //  // 防止 runtime 溢出时tune_time始终大于runtime造成 一直无法加速 的情况
-  73          //  if(runtime==0)tune_time=0;
-  74          // }
-  75          
+  55           *    1、
+  56           * 
+  57           * 
+  58           */
+  59          
+  60          void T1_time() interrupt 3   //T1定时中断函数
+  61          {
+  62   1        TR1=0; 
+  63   1        infrared();
+  64   1        //12M，定时1.5ms
+  65   1        TH1=(65536-2000)/256;
+  66   1        TL1=(65536-2000)%256; 
+  67   1        TR1=1;
+  68   1      }
+  69          
+  70          // void T2_time() interrupt 5   //T2定时中断函数
+  71          // {
+  72          //  TF2 = 0;
+  73          //  runtime++;
+  74          //  // 防止 runtime 溢出时tune_time始终大于runtime造成 一直无法加速 的情况
+  75          //  if(runtime==0)tune_time=0;
+  76          // }
+  77          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    156    ----
+   CODE SIZE        =    151    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----

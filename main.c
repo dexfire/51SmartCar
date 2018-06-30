@@ -45,6 +45,8 @@ void T0_time() interrupt 1     //T0定时中断函数
 	TR0=0;                      //关闭T0中断
 	time++;
 	output();                  //输出
+	TH0=(65536-TIMER0)/256;                 //12M，定时50us
+	TL0=(65536-TIMER0)%256;
 	TR0=1;                //开启T0中断
 }
 
@@ -60,8 +62,8 @@ void T1_time() interrupt 3   //T1定时中断函数
 	TR1=0; 
 	infrared();
 	//12M，定时1.5ms
-	TH1=((*current_time_config).sensitivity)>>8;
-	TL1=(*current_time_config).sensitivity;	
+	TH1=(65536-2000)/256;
+	TL1=(65536-2000)%256;	
 	TR1=1;
 }
 

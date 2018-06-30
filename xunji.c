@@ -12,32 +12,59 @@ unsigned char code segdata[]= {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f
 unsigned char display;
 code struct time_config speed_level_configs[] = {
 	
-	/* 单独一个轮子拐弯可能拖不动 */
+	// /* 单独一个轮子拐弯可能拖不动 */
+
+	// // Mode 1
+	// // 完全跟线走，稍慢, 表现良好
+	// // 6T 模式下动不了 
+	// { 65536 - 200,	5,5,  3,5,2,5,	5,3,5,2,	12500,12000 },
+
+	// // Mode 2
+	// // 完全根线，小弯大弯表现良好，修复能力强，表现优秀
+	// { 65536 - 200,	6,6,	3,6,2,6, 6,3,6,2,12500,12000 },
+
+	// // Mode 3
+	// // 大弯修复能力弱，走着走着就偏了
+	// //{6,6,  1,5,0,5, 5,1,5,0,12000,12000 },
+	// // 尝试减小偏转力度
+	// { 65536 - 200,6,6,  1,4,0,4, 4,1,4,0,12000,12000 },
+
+	// // Mode 4
+	// // 6T 模式下工作良好，表现很好   12T 也还可以
+	// { 65536 - 200,9,9,  3,5,0,5, 5,3,5,0,12000,12000 },
+
+	// // Mode 5
+	// // 高速，拐弯溢出边界
+	// //{15,15,  2,7,1,7, 7,2,7,1,12000,12000 },
+	// // 尝试再次降低修正幅度   效果还可以   稳定性差
+	// { 65536 - 200,13,13,  5,7,3,7, 7,5,7,3,12000,12000 },
+
+		/* 单独一个轮子拐弯可能拖不动 */
 
 	// Mode 1
 	// 完全跟线走，稍慢, 表现良好
 	// 6T 模式下动不了 
-	{ 65536 - 200,	5,5,  3,5,2,5,	5,3,5,2,	12500,12000 },
+	{4,4,  1,4,0,4,	4,1,4,0,	12000,12000 },
 
 	// Mode 2
 	// 完全根线，小弯大弯表现良好，修复能力强，表现优秀
-	{ 65536 - 200,	6,6,	3,6,2,6, 6,3,6,2,12500,12000 },
+	{5,5,  1,5,0,5, 5,1,5,0  ,12000,12000 },
 
 	// Mode 3
 	// 大弯修复能力弱，走着走着就偏了
 	//{6,6,  1,5,0,5, 5,1,5,0,12000,12000 },
 	// 尝试减小偏转力度
-	{ 65536 - 200,6,6,  1,4,0,4, 4,1,4,0,12000,12000 },
+	{6,6,  1,5,0,5, 5,1,5,0,12000,12000 },
 
 	// Mode 4
 	// 6T 模式下工作良好，表现很好   12T 也还可以
-	{ 65536 - 200,9,9,  3,5,0,5, 5,3,5,0,12000,12000 },
+	{9,9,  3,5,0,5, 5,3,5,0,12000,12000 },
 
 	// Mode 5
 	// 高速，拐弯溢出边界
 	//{15,15,  2,7,1,7, 7,2,7,1,12000,12000 },
 	// 尝试再次降低修正幅度   效果还可以   稳定性差
-	{ 65536 - 200,13,13,  5,7,3,7, 7,5,7,3,12000,12000 },
+	{13,13,  5,7,3,7, 7,5,7,3,12000,12000 },
 };
 
 code struct schdule_config schdule_configs[] = {
@@ -61,8 +88,8 @@ unsigned char turn_configs[] = {
 unsigned char current_time_config_index = 0;
 unsigned char current_schdule_config = 0;
 unsigned char current_turn_config = 0;
-unsigned char mode_low = 0;
-unsigned char mode_high = 0;
+unsigned char mode_low = 1;
+unsigned char mode_high = 2;
 unsigned int tune_time = 0;
 unsigned int runtime = 0;
 unsigned int left_steps=0,right_steps=0;
@@ -169,15 +196,15 @@ void key_control()
 void init()
 {
 	EA=1;
-	TMOD=0x12;      //配置为定时器0 8位重装模式，定时器1为16位定时器
+	TMOD=0x11;      //配置为定时器0 8位重装模式，定时器1为16位定时器
 	
-	TH0=256-TIMER0;                 //12M，定时50us
-	TL0=256-TIMER0;
+	TH0=(65536-TIMER0)/256;                 //12M，定时50us
+	TL0=(65536-TIMER0)%256;
 	ET0=1;
 	TR0=0;
 
-	TH1=(65536-1000)>>8;                 //12M，定时2ms
-	TL1=65536-1000;
+	TH1=(65536-2000)/256;                 //12M，定时2ms
+	TL1=(65536-2000)%256;
 	ET1=1;
 	TR1=0;
 	
@@ -205,7 +232,8 @@ void straight() //走直线
 {
 	// 切换配置
 	// 由于比较耗时，所以判断一下当前模式是值得的
-	if((runtime>tune_time)&&(current_time_config_index!=mode_high)){
+	if(runtime > tune_time){
+		if(current_time_config_index!=mode_high)
 		load_time_config(mode_high);
 	}else{
 		pro_left  = (*current_time_config).lstraight;
@@ -246,9 +274,11 @@ void turn_right() //右修正
 void turn_left_max() // 大幅度左修正
 {
 	
-	if((runtime>tune_time)&&(current_time_config_index!=mode_low)){
-		load_time_config(mode_low);
-		tune_time = runtime + ADJUST_TIME_LONG;
+	if(runtime>tune_time){
+		if(current_time_config_index!=mode_low){
+			load_time_config(mode_low);
+			tune_time = runtime + ADJUST_TIME_LONG;
+		}
 	}else{
 		pro_left  = (*current_time_config).lturn_left_max;
 		pro_right = (*current_time_config).rturn_left_max;
@@ -257,9 +287,11 @@ void turn_left_max() // 大幅度左修正
 
 void turn_right_max() // 大幅度右修正
 {
-	if((runtime>tune_time)&&(current_time_config_index!=mode_low)){
-		load_time_config(mode_low);
-		tune_time = runtime + ADJUST_TIME_LONG;
+	if(runtime>tune_time){
+		if(current_time_config_index!=mode_low){
+			load_time_config(mode_low);
+			tune_time = runtime + ADJUST_TIME_LONG;
+		}
 	}else{
 		pro_left  = (*current_time_config).lturn_right_max;
 		pro_right = (*current_time_config).rturn_right_max;
@@ -403,13 +435,14 @@ void infrared() //循迹
 }
 
 // PWM 输出
-void output()    //电机输出函数
+//电机输出函数
+void output()
 {
 	if(time > 19)
 	{
 		time = 0;
 		// 直行
-		IN1_1 = IN2_1= 1;
+		IN1_1 = IN2_1 = 1;
 		IN1_2 = IN2_2 = 0;
 		// 计时器 20*100us = 2 ms
 		// 清零防止 tune_time > runtime 导致模式不能切换 
@@ -418,7 +451,6 @@ void output()    //电机输出函数
 	
 	if(time == pro_left)		IN1_1 = 0;
 	if(time == pro_right)		IN2_1 = 0;
-	
 }
 
 void set_display(unsigned char digit){

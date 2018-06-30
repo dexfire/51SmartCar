@@ -8,10 +8,12 @@
 #define RIGHT 2
 #define STRAIGHT 3
 // 决定供电周期时长  越小控制越灵敏  越大效率越高，速度越快
-#define TIMER0 90
+#define TIMER0 50
 // 修正方向时的等待时间，单位2ms
-#define ADJUST_TIME_SHORT 800
-#define ADJUST_TIME_LONG 1000
+
+// 800 1000 is ok!
+#define ADJUST_TIME_SHORT 600
+#define ADJUST_TIME_LONG 800
 
 sbit GUAN_1=P1^4;
 sbit GUAN_2=P1^5;
@@ -75,7 +77,6 @@ extern unsigned int runtime;
 extern unsigned int distance;
 extern unsigned char display;
 extern struct time_config{
-    unsigned int sensitivity;
     // 直行
     unsigned char lstraight;
     unsigned char rstraight;
