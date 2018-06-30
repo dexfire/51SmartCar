@@ -1,4 +1,0 @@
-".\Objects\main.obj",
-".\Objects\xunji.obj" 
-TO ".\Objects\51car" 
-PRINT(".\Listings\51car.m51")

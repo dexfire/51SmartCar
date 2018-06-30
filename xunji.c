@@ -65,11 +65,15 @@ code struct time_config speed_level_configs[] = {
 	//{15,15,  2,7,1,7, 7,2,7,1,12000,12000 },
 	// 尝试再次降低修正幅度   效果还可以   稳定性差
 	{13,13,  4,7,2,7, 7,4,7,2,12000,12000 },
+
+	{6,6,  1,5,0,5, 5,1,5,0,12000,12000 },
 };
 
 code struct schdule_config schdule_configs[] = {
-	{2,0},
-	{3,0},
+	{2,0},	// 很好
+	{2,1},
+	{5,0},
+	// 不稳定配置
 	{4,0},
 	{2,1},
 	{3,1},
@@ -180,7 +184,7 @@ void key_control()
 			{
 				TR0 = !TR0; 
 				TR1 = TR0; 
-				set_display(TR0*(current_time_config_index+1));
+				set_display(TR0*(current_time_config_index));
 				IN1_1 = 0;
 				IN1_2 = 0;
 				IN2_1 = 0;
