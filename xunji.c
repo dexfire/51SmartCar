@@ -1,9 +1,8 @@
-#include <REG52.h>
 //#include "oled.h"
 //#include "bmp.h"
 #include "xunji.h"
-#include <stdio.h>
 //#include "eeprom.h"
+#include <REG52.H>
 
 unsigned char time = 0;
 unsigned char pro_left=0,pro_right=0;
@@ -44,17 +43,17 @@ code struct time_config speed_level_configs[] = {
 	// 0
 	// 完全跟线走，稍慢, 表现良好
 	// 6T 模式下动不了 
-	{4,4,  2,4,1,4,	4,2,4,1,	12000,12000 },
+	
 
 	// 1
 	// 完全根线，小弯大弯表现良好，修复能力强，表现优秀
-	{5,5,  1,5,0,5, 5,1,5,0  ,11000,12000 },
-
+	{5,5,  1,5,0,5, 5,1,5,0 , 12000,12000 },
+	{10,10,  4,10,2,10,	10,4,10,2,	12000,12000 },
 	// 2
 	// 大弯修复能力弱，走着走着就偏了
 	//{6,6,  1,5,0,5, 5,1,5,0,12000,12000 },
 	// 尝试减小偏转力度
-	{6,6,  1,5,0,5, 5,1,5,0,12000,12000 },
+	{10,10,  3,10,0,10, 10,3,10,0,12000,12000 },
 
 	// 3
 	// 6T 模式下工作良好，表现很好   12T 也还可以
@@ -71,27 +70,52 @@ code struct time_config speed_level_configs[] = {
 	{7,6,  1,5,0,7, 5,1,7,0,	12000,12000 },
 
 	// 7
+	{9,9,  2,10,1,10, 10,2,10,1,	12000,12000 },
+	
+	// 8
+	// 失败的  63 51 
 	{9,9,  1,5,1,5, 5,1,6,1,	12000,12000 },
 	
+	// 9
+	{12,11,  3,11,1,10, 11,3,10,1,	12000,12000 },
+	
+	// 10
+	{ 22,20,  6,22,2,20,22,6,20,2,11000,11500},
+	
+	// 11
+	{ 10,10,  3,10,1,10,	10,3,10,1,	11000,11500 },
+	
+	// 12
+	
+	{ 14,14,  4,14,1,10,	14,4,10,1,	11000,11500 }
 };
 
 code struct schdule_config schdule_configs[] = {
-	{1,1},	// 稳 慢
-	{2,1},	// 很好
-	{5,1},	// 好
+{10,11},	
+{10,9},
+{10,12},
+{9,2},
+	{1,1},	//0 稳 慢
+	{2,1},	//1 很好
+	{2,2},
+	{5,1},	//2 好
 	{6,1},	// 好 快
-	{7,1},
-
+	{7,1},	// 4
+	{8,1},
+	{8,2},
+	{9,1},	// 7
+	{9,2},	// 8
+	
 	// 不稳定配置
 };
 
 unsigned char turn_configs[] = {
 	// 比赛顺序
-	//LEFT,RIGHT,STRAIGHT,RIGHT,LEFT
-	RIGHT,
-	LEFT,
-	LEFT,
-	RIGHT
+	LEFT,RIGHT,STRAIGHT,RIGHT,LEFT
+//	RIGHT,
+//	LEFT,
+//	LEFT,
+//	RIGHT
 };
 
 unsigned char current_time_config_index = 0;
@@ -257,31 +281,31 @@ void straight() //走直线
 void turn_left() //左修正
 {
 
-	pro_left  = (*current_time_config).lturn_left;
-	pro_right = (*current_time_config).rturn_left;
-	
-//	if((runtime>tune_time)&&(current_time_config_index!=mode_low)){
-//		load_time_config(mode_low);
-//		
-//		tune_time = runtime + ADJUST_TIME_SHORT;
-//	}else{
-//		pro_left  = (*current_time_config).lturn_left;
-//		pro_right = (*current_time_config).rturn_left;
-//	}
+//	pro_left  = (*current_time_config).lturn_left;
+//	pro_right = (*current_time_config).rturn_left;
+//	
+	if((runtime>tune_time)&&(current_time_config_index!=mode_low)){
+		load_time_config(mode_low);
+		
+		tune_time = runtime + ADJUST_TIME_SHORT;
+	}else{
+		pro_left  = (*current_time_config).lturn_left;
+		pro_right = (*current_time_config).rturn_left;
+	}
 }
 
 void turn_right() //右修正
 {
-	pro_left  = (*current_time_config).lturn_right;
-	pro_right = (*current_time_config).rturn_right;
-	
-//	if((runtime>tune_time)&&(current_time_config_index!=mode_low)){
-//		load_time_config(mode_low);
-//		tune_time = runtime + ADJUST_TIME_SHORT;
-//	}else{
-//		pro_left  = (*current_time_config).lturn_right;
-//		pro_right = (*current_time_config).rturn_right;
-//	}
+//	pro_left  = (*current_time_config).lturn_right;
+//	pro_right = (*current_time_config).rturn_right;
+//	
+	if((runtime>tune_time)&&(current_time_config_index!=mode_low)){
+		load_time_config(mode_low);
+		tune_time = runtime + ADJUST_TIME_SHORT;
+	}else{
+		pro_left  = (*current_time_config).lturn_right;
+		pro_right = (*current_time_config).rturn_right;
+	}
 }
 
 void turn_left_max() // 大幅度左修正
@@ -316,12 +340,16 @@ void turn_right_max() // 大幅度右修正
 //左转90度
 void turn_left_90() 
 {
+	
 	unsigned int i=(*current_time_config).ltime;         //转过度减少时间，没转够增加时间
+	load_time_config(mode_low);
+		tune_time = runtime + ADJUST_TIME_LONG;
 	while(i--)
 	{
 		// 右电机正转，  左电机反转
-		if(i%4) IN2_1 = 1,IN1_2 =1;   //降低转弯速度,便于控制
-		else IN2_1 = 0,IN1_2 =0;
+		//if(i%2) 
+		IN2_1 = 1,IN1_2 =1;   //降低转弯速度,便于控制
+		//else IN2_1 = 0,IN1_2 =0;
 	}
 	IN2_1 = 0;
 	IN1_2 = 0;
@@ -331,11 +359,16 @@ void turn_left_90()
 // 左电机正转，右电机反转 加快转弯速度
 void turn_right_90() //右转90度
 {
+	
 	unsigned int i=(*current_time_config).rtime;         //转过度减少时间，没转够增加时间
+	load_time_config(mode_low);
+		
+		tune_time = runtime + ADJUST_TIME_SHORT;
 	while(i--)
 	{
-		if(i%4) IN1_1 = 1,IN2_2 =1;   //降低转弯速度,便于控制
-		else IN1_1 = 0,IN2_2 =0;
+		//if(i%2) 
+		IN1_1 = 1,IN2_2 =1;   //降低转弯速度,便于控制
+		//else IN1_1 = 0,IN2_2 =0;
 	}
 	IN1_1 = 0;
 	IN2_2 = 0;
@@ -369,7 +402,7 @@ void stop()
 }
 
 void slight_stop(){
-	unsigned int i = 500;         //转过度减少时间，没转够增加时间
+	unsigned int i = 200;         //转过度减少时间，没转够增加时间
 	while(i--)
 	{
 		// 右电机正转，  左电机反转
@@ -464,7 +497,7 @@ void infrared() //循迹
 //电机输出函数
 void output()
 {
-	if(time > 29)
+	if(time > 39)
 	{
 		time = 0;
 		// 直行
