@@ -139,4 +139,5 @@ void set_display_now();
 //void tune_speed(enum speed_control sc);
 // 检测轮子状态
 void get_wheel_steps();
+void slight_stop();
 #endif

@@ -41,46 +41,48 @@ code struct time_config speed_level_configs[] = {
 
 		/* 单独一个轮子拐弯可能拖不动 */
 
-	// Mode 1
+	// 0
 	// 完全跟线走，稍慢, 表现良好
 	// 6T 模式下动不了 
 	{4,4,  2,4,1,4,	4,2,4,1,	12000,12000 },
 
-	// Mode 2
+	// 1
 	// 完全根线，小弯大弯表现良好，修复能力强，表现优秀
-	{5,5,  1,5,0,5, 5,1,5,0  ,12000,12000 },
+	{5,5,  1,5,0,5, 5,1,5,0  ,11000,12000 },
 
-	// Mode 3
+	// 2
 	// 大弯修复能力弱，走着走着就偏了
 	//{6,6,  1,5,0,5, 5,1,5,0,12000,12000 },
 	// 尝试减小偏转力度
 	{6,6,  1,5,0,5, 5,1,5,0,12000,12000 },
 
-	// Mode 4
+	// 3
 	// 6T 模式下工作良好，表现很好   12T 也还可以
 	{9,9,  0,4,0,5, 4,0,5,0, 12000,12000 },
 
-	// Mode 5
-	// 高速，拐弯溢出边界
-	//{15,15,  2,7,1,7, 7,2,7,1,12000,12000 },
+	// 4
 	// 尝试再次降低修正幅度   效果还可以   稳定性差
 	{13,13,  4,7,2,7, 7,4,7,2,12000,12000 },
+	
+	// 5
+	{6,6,  1,5,1,6,	5,1,6,1,	12000,12000 },
 
-	{6,6,  1,4,0,4, 4,1,4,0,12000,12000 },
+	// 6
+	{7,6,  1,5,0,7, 5,1,7,0,	12000,12000 },
+
+	// 7
+	{9,9,  1,5,1,5, 5,1,6,1,	12000,12000 },
+	
 };
 
 code struct schdule_config schdule_configs[] = {
-	{0,0},
-	{1,1},
-	{0,1},
-	{2,0},	// 很好
-	{2,1},
-	{5,0},
-	{5,1},
+	{1,1},	// 稳 慢
+	{2,1},	// 很好
+	{5,1},	// 好
+	{6,1},	// 好 快
+	{7,1},
 
 	// 不稳定配置
-	{2,1},
-	{3,1},
 };
 
 unsigned char turn_configs[] = {
@@ -287,6 +289,7 @@ void turn_left_max() // 大幅度左修正
 	
 	if(runtime>tune_time){
 		if(current_time_config_index!=mode_low){
+			slight_stop();
 			load_time_config(mode_low);
 			tune_time = runtime + ADJUST_TIME_LONG;
 		}
@@ -300,6 +303,7 @@ void turn_right_max() // 大幅度右修正
 {
 	if(runtime>tune_time){
 		if(current_time_config_index!=mode_low){
+			slight_stop();
 			load_time_config(mode_low);
 			tune_time = runtime + ADJUST_TIME_LONG;
 		}
@@ -362,6 +366,18 @@ void stop()
 			BUZZER = !BUZZER;
 		}	
 	}
+}
+
+void slight_stop(){
+	unsigned int i = 500;         //转过度减少时间，没转够增加时间
+	while(i--)
+	{
+		// 右电机正转，  左电机反转
+		if(i%4) IN2_2 = 1,IN1_2 =1;   //降低转弯速度,便于控制
+		else IN1_1 = 0,IN1_2 =0;
+	}
+	IN2_1 = 0;
+	IN2_2 = 0;
 }
 
 /**
@@ -482,7 +498,7 @@ void set_display_now(){
 void load_time_config(char idx){
 	current_time_config_index = idx;
 	current_time_config = &speed_level_configs + current_time_config_index;
-	set_display(current_time_config_index+1);
+	set_display(current_time_config_index);
 }
 
 // 检测轮子状态
