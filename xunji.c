@@ -70,8 +70,8 @@ code struct time_config speed_level_configs[] = {
 };
 
 code struct schdule_config schdule_configs[] = {
-	{1,1},
 	{0,0},
+	{1,1},
 	{0,1},
 	{2,0},	// 很好
 	{2,1},
@@ -448,7 +448,7 @@ void infrared() //循迹
 //电机输出函数
 void output()
 {
-	if(time > 19)
+	if(time > 29)
 	{
 		time = 0;
 		// 直行
