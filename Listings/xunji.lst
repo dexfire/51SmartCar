@@ -1,4 +1,4 @@
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 11:43:41 PAGE 1   
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 12:00:34 PAGE 1   
 
 
 C51 COMPILER V9.57.0.0, COMPILATION OF MODULE XUNJI
@@ -62,7 +62,7 @@ line level    source
   51            {5,5,  1,5,0,5, 5,1,5,0  ,12000,12000 },
   52          
   53            // Mode 3
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 11:43:41 PAGE 2   
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 12:00:34 PAGE 2   
 
   54            // 大弯修复能力弱，走着走着就偏了
   55            //{6,6,  1,5,0,5, 5,1,5,0,12000,12000 },
@@ -83,441 +83,444 @@ line level    source
   70          };
   71          
   72          code struct schdule_config schdule_configs[] = {
-  73            {2,0},  // 很好
-  74            {2,1},
-  75            {5,0},
-  76            {5,1},
-  77            // 不稳定配置
-  78            {4,0},
-  79            {2,1},
-  80            {3,1},
-  81            {4,1},
-  82          };
-  83          
-  84          unsigned char turn_configs[] = {
-  85            // 比赛顺序
-  86            //LEFT,RIGHT,STRAIGHT,RIGHT,LEFT
-  87            RIGHT,
-  88            LEFT,
-  89            LEFT,
-  90            RIGHT
-  91          };
-  92          
-  93          unsigned char current_time_config_index = 0;
-  94          unsigned char current_schdule_config = 0;
-  95          unsigned char current_turn_config = 0;
-  96          unsigned char mode_low = 1;
-  97          unsigned char mode_high = 2;
-  98          unsigned int tune_time = 0;
-  99          unsigned int runtime = 0;
- 100          unsigned int left_steps=0,right_steps=0;
- 101          
- 102          void delay(int i)      //12M   i=500,t=500ms
- 103          {
- 104   1        unsigned char j;
- 105   1        for( ;i>0;i--)
- 106   1          for(j=220;j>0;j--);
- 107   1      }
- 108          
- 109          char key_scan(void)    //按键扫描
- 110          {
- 111   1        C0=0;
- 112   1        delay(1);
- 113   1        if(!(R0&&R1&&R2)){BUZZER=0;delay(10);} 
- 114   1        if(!(R0&&R1&&R2))
- 115   1        {
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 11:43:41 PAGE 3   
+  73            {1,1},
+  74            {0,0},
+  75            {0,1},
+  76            {2,0},  // 很好
+  77            {2,1},
+  78            {5,0},
+  79            {5,1},
+  80          
+  81            // 不稳定配置
+  82            {2,1},
+  83            {3,1},
+  84          };
+  85          
+  86          unsigned char turn_configs[] = {
+  87            // 比赛顺序
+  88            //LEFT,RIGHT,STRAIGHT,RIGHT,LEFT
+  89            RIGHT,
+  90            LEFT,
+  91            LEFT,
+  92            RIGHT
+  93          };
+  94          
+  95          unsigned char current_time_config_index = 0;
+  96          unsigned char current_schdule_config = 0;
+  97          unsigned char current_turn_config = 0;
+  98          unsigned char mode_low = 1;
+  99          unsigned char mode_high = 2;
+ 100          unsigned int tune_time = 0;
+ 101          unsigned int runtime = 0;
+ 102          unsigned int left_steps=0,right_steps=0;
+ 103          
+ 104          void delay(int i)      //12M   i=500,t=500ms
+ 105          {
+ 106   1        unsigned char j;
+ 107   1        for( ;i>0;i--)
+ 108   1          for(j=220;j>0;j--);
+ 109   1      }
+ 110          
+ 111          char key_scan(void)    //按键扫描
+ 112          {
+ 113   1        C0=0;
+ 114   1        delay(1);
+ 115   1        if(!(R0&&R1&&R2)){BUZZER=0;delay(10);} 
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 12:00:34 PAGE 3   
 
- 116   2          if(!R0) {while(!R0);BUZZER=1;return 1;}
- 117   2          if(!R1) {while(!R1);BUZZER=1;return 2;}
- 118   2          if(!R2) {while(!R2);BUZZER=1;return 3;}
- 119   2        }
- 120   1        C0=1;
- 121   1        
- 122   1        C1=0;
- 123   1        delay(1);
- 124   1        if(!(R0&&R1&&R2)) delay(10);
- 125   1        if(!(R0&&R1&&R2))
- 126   1        {
- 127   2          if(!R0) {while(!R0);BUZZER=1;return 4;}
- 128   2          if(!R1) {while(!R1);BUZZER=1;return 5;}
- 129   2          if(!R2) {while(!R2);BUZZER=1;return 6;}
- 130   2        }
- 131   1        C1=1;
- 132   1        
- 133   1        C2=0;
- 134   1        delay(1);
- 135   1        if(!(R0&&R1&&R2)) delay(10);
- 136   1        if(!(R0&&R1&&R2))
- 137   1        {
- 138   2          if(!R0) {while(!R0);BUZZER=1;return 7;}
- 139   2          if(!R1) {while(!R1);BUZZER=1;return 8;}
- 140   2          if(!R2) {while(!R2);BUZZER=1;return 9;}
- 141   2        }
- 142   1        C2=1;
- 143   1        
- 144   1        return 0;
- 145   1      }
- 146          
- 147          void key_control()
- 148          {
- 149   1        switch(key_scan()) 
- 150   1          {
- 151   2            case 1:
- 152   2              set_display(current_time_config_index);
- 153   2              break;
- 154   2      
- 155   2            case 2:
- 156   2              set_display(current_turn_config);
- 157   2              break;
- 158   2            
- 159   2            case 3:
- 160   2              set_display(tune_time);
- 161   2              break;
- 162   2      
- 163   2            case 8:        //换模式
- 164   2            {
- 165   3              // // 循环切换速度
- 166   3              // current_time_config_index++;
- 167   3              // if(current_time_config_index>=sizeof(speed_level_configs)/sizeof(struct time_config))
- 168   3              //  current_time_config_index = 0;
- 169   3              // load_time_config(current_time_config_index);
- 170   3              current_schdule_config++;
- 171   3              if(current_schdule_config>=sizeof(schdule_configs)/sizeof(struct schdule_config)){
- 172   4                current_schdule_config = 0;
- 173   4              }
- 174   3              set_display(current_schdule_config);
- 175   3              mode_low = schdule_configs[current_schdule_config].adjust_time_config;
- 176   3              mode_high = schdule_configs[current_schdule_config].straight_time_config;
- 177   3              break;
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 11:43:41 PAGE 4   
+ 116   1        if(!(R0&&R1&&R2))
+ 117   1        {
+ 118   2          if(!R0) {while(!R0);BUZZER=1;return 1;}
+ 119   2          if(!R1) {while(!R1);BUZZER=1;return 2;}
+ 120   2          if(!R2) {while(!R2);BUZZER=1;return 3;}
+ 121   2        }
+ 122   1        C0=1;
+ 123   1        
+ 124   1        C1=0;
+ 125   1        delay(1);
+ 126   1        if(!(R0&&R1&&R2)) delay(10);
+ 127   1        if(!(R0&&R1&&R2))
+ 128   1        {
+ 129   2          if(!R0) {while(!R0);BUZZER=1;return 4;}
+ 130   2          if(!R1) {while(!R1);BUZZER=1;return 5;}
+ 131   2          if(!R2) {while(!R2);BUZZER=1;return 6;}
+ 132   2        }
+ 133   1        C1=1;
+ 134   1        
+ 135   1        C2=0;
+ 136   1        delay(1);
+ 137   1        if(!(R0&&R1&&R2)) delay(10);
+ 138   1        if(!(R0&&R1&&R2))
+ 139   1        {
+ 140   2          if(!R0) {while(!R0);BUZZER=1;return 7;}
+ 141   2          if(!R1) {while(!R1);BUZZER=1;return 8;}
+ 142   2          if(!R2) {while(!R2);BUZZER=1;return 9;}
+ 143   2        }
+ 144   1        C2=1;
+ 145   1        
+ 146   1        return 0;
+ 147   1      }
+ 148          
+ 149          void key_control()
+ 150          {
+ 151   1        switch(key_scan()) 
+ 152   1          {
+ 153   2            case 1:
+ 154   2              set_display(current_time_config_index);
+ 155   2              break;
+ 156   2      
+ 157   2            case 2:
+ 158   2              set_display(current_turn_config);
+ 159   2              break;
+ 160   2            
+ 161   2            case 3:
+ 162   2              set_display(tune_time);
+ 163   2              break;
+ 164   2      
+ 165   2            case 8:        //换模式
+ 166   2            {
+ 167   3              // // 循环切换速度
+ 168   3              // current_time_config_index++;
+ 169   3              // if(current_time_config_index>=sizeof(speed_level_configs)/sizeof(struct time_config))
+ 170   3              //  current_time_config_index = 0;
+ 171   3              // load_time_config(current_time_config_index);
+ 172   3              current_schdule_config++;
+ 173   3              if(current_schdule_config>=sizeof(schdule_configs)/sizeof(struct schdule_config)){
+ 174   4                current_schdule_config = 0;
+ 175   4              }
+ 176   3              set_display(current_schdule_config);
+ 177   3              mode_low = schdule_configs[current_schdule_config].adjust_time_config;
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 12:00:34 PAGE 4   
 
- 178   3              // page--;
- 179   3              // if(page<1) page=1;
- 180   3              // set_display(page);
- 181   3              // break;
- 182   3            }
- 183   2            // 开始、暂停、继续
- 184   2            case 9:
- 185   2            {
- 186   3              TR0 = !TR0; 
- 187   3              TR1 = TR0; 
- 188   3              set_display(TR0*(current_time_config_index));
- 189   3              IN1_1 = 0;
- 190   3              IN1_2 = 0;
- 191   3              IN2_1 = 0;
- 192   3              IN2_2 = 0;
- 193   3              tune_time = 0;
- 194   3              runtime = 0;
- 195   3              break;
- 196   3            }
- 197   2          }
- 198   1      }
- 199          
- 200          
- 201          void init()
- 202          {
- 203   1        EA=1;
- 204   1        TMOD=0x11;      //配置为定时器0 8位重装模式，定时器1为16位定时器
- 205   1        
- 206   1        TH0=(65536-TIMER0)/256;                 //12M，定时50us
- 207   1        TL0=(65536-TIMER0)%256;
- 208   1        ET0=1;
- 209   1        TR0=0;
- 210   1      
- 211   1        TH1=(65536-2000)/256;                 //12M，定时2ms
- 212   1        TL1=(65536-2000)%256;
- 213   1        ET1=1;
- 214   1        TR1=0;
- 215   1        
- 216   1        // T2CON = 0;  //0000 0000   ;定时器2配置为16位自动重装定时器
- 217   1        // RCAP2H = _iror_(65536-250,8);
- 218   1        // RCAP2L = 65536-250;
- 219   1        // TH2 = _iror_(65536-250,8);
- 220   1        // TL2 = 65536-250;
- 221   1        // ET2 = 1;
- 222   1        // TR2 = 0;
- 223   1        
- 224   1        TRIG = 0;
- 225   1        ECHO = 1;
- 226   1        SIG1 = 0;
- 227   1        BUZZER = 1;
- 228   1        IN1_1 = 0;
- 229   1        IN1_2 = 0;
- 230   1        IN2_1 = 0;
- 231   1        IN2_2 = 0;
- 232   1        current_time_config = &speed_level_configs[0];
- 233   1        //eeprom_init();
- 234   1        set_display(0);
- 235   1      }
- 236          
- 237          void straight() //走直线
- 238          {
- 239   1        // 切换配置
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 11:43:41 PAGE 5   
+ 178   3              mode_high = schdule_configs[current_schdule_config].straight_time_config;
+ 179   3              break;
+ 180   3              // page--;
+ 181   3              // if(page<1) page=1;
+ 182   3              // set_display(page);
+ 183   3              // break;
+ 184   3            }
+ 185   2            // 开始、暂停、继续
+ 186   2            case 9:
+ 187   2            {
+ 188   3              TR0 = !TR0; 
+ 189   3              TR1 = TR0; 
+ 190   3              set_display(TR0*(current_time_config_index));
+ 191   3              IN1_1 = 0;
+ 192   3              IN1_2 = 0;
+ 193   3              IN2_1 = 0;
+ 194   3              IN2_2 = 0;
+ 195   3              tune_time = 0;
+ 196   3              runtime = 0;
+ 197   3              break;
+ 198   3            }
+ 199   2          }
+ 200   1      }
+ 201          
+ 202          
+ 203          void init()
+ 204          {
+ 205   1        EA=1;
+ 206   1        TMOD=0x11;      //配置为定时器0 8位重装模式，定时器1为16位定时器
+ 207   1        
+ 208   1        TH0=(65536-TIMER0)/256;                 //12M，定时50us
+ 209   1        TL0=(65536-TIMER0)%256;
+ 210   1        ET0=1;
+ 211   1        TR0=0;
+ 212   1      
+ 213   1        TH1=(65536-2000)/256;                 //12M，定时2ms
+ 214   1        TL1=(65536-2000)%256;
+ 215   1        ET1=1;
+ 216   1        TR1=0;
+ 217   1        
+ 218   1        // T2CON = 0;  //0000 0000   ;定时器2配置为16位自动重装定时器
+ 219   1        // RCAP2H = _iror_(65536-250,8);
+ 220   1        // RCAP2L = 65536-250;
+ 221   1        // TH2 = _iror_(65536-250,8);
+ 222   1        // TL2 = 65536-250;
+ 223   1        // ET2 = 1;
+ 224   1        // TR2 = 0;
+ 225   1        
+ 226   1        TRIG = 0;
+ 227   1        ECHO = 1;
+ 228   1        SIG1 = 0;
+ 229   1        BUZZER = 1;
+ 230   1        IN1_1 = 0;
+ 231   1        IN1_2 = 0;
+ 232   1        IN2_1 = 0;
+ 233   1        IN2_2 = 0;
+ 234   1        current_time_config = &speed_level_configs[0];
+ 235   1        //eeprom_init();
+ 236   1        set_display(0);
+ 237   1      }
+ 238          
+ 239          void straight() //走直线
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 12:00:34 PAGE 5   
 
- 240   1        // 由于比较耗时，所以判断一下当前模式是值得的
- 241   1        if(runtime > tune_time){
- 242   2          if(current_time_config_index!=mode_high)
- 243   2            load_time_config(mode_high);
- 244   2        }else{
- 245   2          pro_left  = (*current_time_config).lstraight;
- 246   2          pro_right = (*current_time_config).rstraight;
- 247   2        }
- 248   1      }
- 249          
- 250          void turn_left() //左修正
- 251          {
- 252   1      
- 253   1        pro_left  = (*current_time_config).lturn_left;
- 254   1        pro_right = (*current_time_config).rturn_left;
- 255   1        
- 256   1      //  if((runtime>tune_time)&&(current_time_config_index!=mode_low)){
- 257   1      //    load_time_config(mode_low);
- 258   1      //    
- 259   1      //    tune_time = runtime + ADJUST_TIME_SHORT;
- 260   1      //  }else{
- 261   1      //    pro_left  = (*current_time_config).lturn_left;
- 262   1      //    pro_right = (*current_time_config).rturn_left;
- 263   1      //  }
- 264   1      }
- 265          
- 266          void turn_right() //右修正
- 267          {
- 268   1        pro_left  = (*current_time_config).lturn_right;
- 269   1        pro_right = (*current_time_config).rturn_right;
- 270   1        
- 271   1      //  if((runtime>tune_time)&&(current_time_config_index!=mode_low)){
- 272   1      //    load_time_config(mode_low);
- 273   1      //    tune_time = runtime + ADJUST_TIME_SHORT;
- 274   1      //  }else{
- 275   1      //    pro_left  = (*current_time_config).lturn_right;
- 276   1      //    pro_right = (*current_time_config).rturn_right;
- 277   1      //  }
- 278   1      }
- 279          
- 280          void turn_left_max() // 大幅度左修正
- 281          {
- 282   1        
- 283   1        if(runtime>tune_time){
- 284   2          if(current_time_config_index!=mode_low){
- 285   3            load_time_config(mode_low);
- 286   3            tune_time = runtime + ADJUST_TIME_LONG;
- 287   3          }
- 288   2        }else{
- 289   2          pro_left  = (*current_time_config).lturn_left_max;
- 290   2          pro_right = (*current_time_config).rturn_left_max;
- 291   2        }
- 292   1      }
- 293          
- 294          void turn_right_max() // 大幅度右修正
- 295          {
- 296   1        if(runtime>tune_time){
- 297   2          if(current_time_config_index!=mode_low){
- 298   3            load_time_config(mode_low);
- 299   3            tune_time = runtime + ADJUST_TIME_LONG;
- 300   3          }
- 301   2        }else{
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 11:43:41 PAGE 6   
+ 240          {
+ 241   1        // 切换配置
+ 242   1        // 由于比较耗时，所以判断一下当前模式是值得的
+ 243   1        if(runtime > tune_time){
+ 244   2          if(current_time_config_index!=mode_high){
+ 245   3      
+ 246   3          }
+ 247   2            load_time_config(mode_high);
+ 248   2        }
+ 249   1        pro_left  = (*current_time_config).lstraight;
+ 250   1        pro_right = (*current_time_config).rstraight;
+ 251   1      }
+ 252          
+ 253          void turn_left() //左修正
+ 254          {
+ 255   1      
+ 256   1        pro_left  = (*current_time_config).lturn_left;
+ 257   1        pro_right = (*current_time_config).rturn_left;
+ 258   1        
+ 259   1      //  if((runtime>tune_time)&&(current_time_config_index!=mode_low)){
+ 260   1      //    load_time_config(mode_low);
+ 261   1      //    
+ 262   1      //    tune_time = runtime + ADJUST_TIME_SHORT;
+ 263   1      //  }else{
+ 264   1      //    pro_left  = (*current_time_config).lturn_left;
+ 265   1      //    pro_right = (*current_time_config).rturn_left;
+ 266   1      //  }
+ 267   1      }
+ 268          
+ 269          void turn_right() //右修正
+ 270          {
+ 271   1        pro_left  = (*current_time_config).lturn_right;
+ 272   1        pro_right = (*current_time_config).rturn_right;
+ 273   1        
+ 274   1      //  if((runtime>tune_time)&&(current_time_config_index!=mode_low)){
+ 275   1      //    load_time_config(mode_low);
+ 276   1      //    tune_time = runtime + ADJUST_TIME_SHORT;
+ 277   1      //  }else{
+ 278   1      //    pro_left  = (*current_time_config).lturn_right;
+ 279   1      //    pro_right = (*current_time_config).rturn_right;
+ 280   1      //  }
+ 281   1      }
+ 282          
+ 283          void turn_left_max() // 大幅度左修正
+ 284          {
+ 285   1        
+ 286   1        if(runtime>tune_time){
+ 287   2          if(current_time_config_index!=mode_low){
+ 288   3            load_time_config(mode_low);
+ 289   3            tune_time = runtime + ADJUST_TIME_LONG;
+ 290   3          }
+ 291   2        }else{
+ 292   2          pro_left  = (*current_time_config).lturn_left_max;
+ 293   2          pro_right = (*current_time_config).rturn_left_max;
+ 294   2        }
+ 295   1      }
+ 296          
+ 297          void turn_right_max() // 大幅度右修正
+ 298          {
+ 299   1        if(runtime>tune_time){
+ 300   2          if(current_time_config_index!=mode_low){
+ 301   3            load_time_config(mode_low);
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 12:00:34 PAGE 6   
 
- 302   2          pro_left  = (*current_time_config).lturn_right_max;
- 303   2          pro_right = (*current_time_config).rturn_right_max;
- 304   2        }
- 305   1      }
- 306          
- 307          //左转90度
- 308          void turn_left_90() 
- 309          {
- 310   1        unsigned int i=(*current_time_config).ltime;         //转过度减少时间，没转够增加时间
- 311   1        while(i--)
- 312   1        {
- 313   2          // 右电机正转，  左电机反转
- 314   2          if(i%4) IN2_1 = 1,IN1_2 =1;   //降低转弯速度,便于控制
- 315   2          else IN2_1 = 0,IN1_2 =0;
- 316   2        }
- 317   1        IN2_1 = 0;
- 318   1        IN1_2 = 0;
- 319   1      }
- 320          
- 321          // 左转弯实现
- 322          // 左电机正转，右电机反转 加快转弯速度
- 323          void turn_right_90() //右转90度
- 324          {
- 325   1        unsigned int i=(*current_time_config).rtime;         //转过度减少时间，没转够增加时间
- 326   1        while(i--)
- 327   1        {
- 328   2          if(i%4) IN1_1 = 1,IN2_2 =1;   //降低转弯速度,便于控制
- 329   2          else IN1_1 = 0,IN2_2 =0;
- 330   2        }
- 331   1        IN1_1 = 0;
- 332   1        IN2_2 = 0;
- 333   1      }
- 334          
- 335          void go_straight()
- 336          {
- 337   1        unsigned int i=5000;
- 338   1        while(i--)
- 339   1        {
- 340   2          if(i%4) IN1_1 = 1,IN2_1 =1;   //降低速度,便于控制
- 341   2          else IN1_1 = 0,IN2_1 =0;
- 342   2        }
- 343   1        IN1_1 = 0;
- 344   1        IN2_1 = 0;
- 345   1      }
- 346          
- 347          void stop()
- 348          {
- 349   1        unsigned int i,j=0;
- 350   1        // 防止中断函数导致停止失败
- 351   1        for(i=5;i>1;i--) wait();
- 352   1        while(1){
- 353   2          key_control();
- 354   2          set_display(j++);
- 355   2          for(i=500;i>1;i--){
- 356   3            delay(10);
- 357   3            BUZZER = !BUZZER;
- 358   3          } 
- 359   2        }
- 360   1      }
- 361          
- 362          /**
- 363           *    十字路口处理程序
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 11:43:41 PAGE 7   
+ 302   3            tune_time = runtime + ADJUST_TIME_LONG;
+ 303   3          }
+ 304   2        }else{
+ 305   2          pro_left  = (*current_time_config).lturn_right_max;
+ 306   2          pro_right = (*current_time_config).rturn_right_max;
+ 307   2        }
+ 308   1      }
+ 309          
+ 310          //左转90度
+ 311          void turn_left_90() 
+ 312          {
+ 313   1        unsigned int i=(*current_time_config).ltime;         //转过度减少时间，没转够增加时间
+ 314   1        while(i--)
+ 315   1        {
+ 316   2          // 右电机正转，  左电机反转
+ 317   2          if(i%4) IN2_1 = 1,IN1_2 =1;   //降低转弯速度,便于控制
+ 318   2          else IN2_1 = 0,IN1_2 =0;
+ 319   2        }
+ 320   1        IN2_1 = 0;
+ 321   1        IN1_2 = 0;
+ 322   1      }
+ 323          
+ 324          // 左转弯实现
+ 325          // 左电机正转，右电机反转 加快转弯速度
+ 326          void turn_right_90() //右转90度
+ 327          {
+ 328   1        unsigned int i=(*current_time_config).rtime;         //转过度减少时间，没转够增加时间
+ 329   1        while(i--)
+ 330   1        {
+ 331   2          if(i%4) IN1_1 = 1,IN2_2 =1;   //降低转弯速度,便于控制
+ 332   2          else IN1_1 = 0,IN2_2 =0;
+ 333   2        }
+ 334   1        IN1_1 = 0;
+ 335   1        IN2_2 = 0;
+ 336   1      }
+ 337          
+ 338          void go_straight()
+ 339          {
+ 340   1        unsigned int i=5000;
+ 341   1        while(i--)
+ 342   1        {
+ 343   2          if(i%4) IN1_1 = 1,IN2_1 =1;   //降低速度,便于控制
+ 344   2          else IN1_1 = 0,IN2_1 =0;
+ 345   2        }
+ 346   1        IN1_1 = 0;
+ 347   1        IN2_1 = 0;
+ 348   1      }
+ 349          
+ 350          void stop()
+ 351          {
+ 352   1        unsigned int i,j=0;
+ 353   1        // 防止中断函数导致停止失败
+ 354   1        for(i=5;i>1;i--) wait();
+ 355   1        while(1){
+ 356   2          key_control();
+ 357   2          set_display(j++);
+ 358   2          for(i=500;i>1;i--){
+ 359   3            delay(10);
+ 360   3            BUZZER = !BUZZER;
+ 361   3          } 
+ 362   2        }
+ 363   1      }
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 12:00:34 PAGE 7   
 
- 364           *    1、停止当前调整动作
- 365           *    2、测距
- 366           *    3、判断应该【到终点、左90°转、右90转、直行】
- 367           *    4、结束后恢复定时器
- 368           */
- 369          void crossroad()
- 370          {
- 371   1        if(XUNJI_1 && XUNJI_2 && XUNJI_3 && XUNJI_4)  //依旧四灯全灭,有理由相信遇到十字路口
- 372   1        {
- 373   2          wait();
- 374   2          if(current_turn_config<sizeof(turn_configs)){
- 375   3            if(turn_configs[current_turn_config]==LEFT){
- 376   4              turn_left_90();
- 377   4              go_straight();
- 378   4              TR0 = 1;   //开启T0中断
- 379   4              TR1 = 1;   //开启T1中断
- 380   4            }else if(turn_configs[current_turn_config]==RIGHT){
- 381   4              turn_right_90();
- 382   4              go_straight();
- 383   4              TR0 = 1;   //开启T0中断
- 384   4              TR1 = 1;   //开启T1中断
- 385   4            }else if(turn_configs[current_turn_config]==STRAIGHT){
- 386   4              // 快速直行走出十字路口区域
- 387   4              go_straight();
- 388   4              TR0 = 1;   //开启T0中断
- 389   4              TR1 = 1;   //开启T1中断
- 390   4            }
- 391   3          }else{
- 392   3            stop();
- 393   3            current_turn_config = 0;
- 394   3          }
- 395   2          current_turn_config++;
- 396   2          set_display(current_turn_config);
- 397   2        }
- 398   1      }
- 399          
- 400          void wait() //暂停
- 401          {
- 402   1        TR1 = 0;
- 403   1        TR0 = 0;
- 404   1        time = 0;
- 405   1        tune_time = 0;
- 406   1        runtime = 0;
- 407   1        pro_left = 0;
- 408   1        pro_right = 0;
- 409   1        IN1_1 = IN1_2 = IN2_1 = IN2_2 = 0;
- 410   1      }
- 411          /**
- 412           *    循迹1、2、3、4 对应 左、左中、右中、右
- 413           *    地面为白色时，灯亮，端口电平->低
- 414           *    地面为黑色时，灯灭，端口电平->高
- 415           *    左边灯灭，
- 416           */
- 417          void infrared() //循迹
- 418          {
- 419   1        //四灯全灭,可能遇到十字路口
- 420   1        if(XUNJI_1 && XUNJI_2 && XUNJI_3 && XUNJI_4)
- 421   1          crossroad();
- 422   1        //严重偏右
- 423   1        else if(XUNJI_1)
- 424   1          turn_left_max();
- 425   1        //严重偏左
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 11:43:41 PAGE 8   
+ 364          
+ 365          /**
+ 366           *    十字路口处理程序
+ 367           *    1、停止当前调整动作
+ 368           *    2、测距
+ 369           *    3、判断应该【到终点、左90°转、右90转、直行】
+ 370           *    4、结束后恢复定时器
+ 371           */
+ 372          void crossroad()
+ 373          {
+ 374   1        if(XUNJI_1 && XUNJI_2 && XUNJI_3 && XUNJI_4)  //依旧四灯全灭,有理由相信遇到十字路口
+ 375   1        {
+ 376   2          wait();
+ 377   2          if(current_turn_config<sizeof(turn_configs)){
+ 378   3            if(turn_configs[current_turn_config]==LEFT){
+ 379   4              turn_left_90();
+ 380   4              go_straight();
+ 381   4              TR0 = 1;   //开启T0中断
+ 382   4              TR1 = 1;   //开启T1中断
+ 383   4            }else if(turn_configs[current_turn_config]==RIGHT){
+ 384   4              turn_right_90();
+ 385   4              go_straight();
+ 386   4              TR0 = 1;   //开启T0中断
+ 387   4              TR1 = 1;   //开启T1中断
+ 388   4            }else if(turn_configs[current_turn_config]==STRAIGHT){
+ 389   4              // 快速直行走出十字路口区域
+ 390   4              go_straight();
+ 391   4              TR0 = 1;   //开启T0中断
+ 392   4              TR1 = 1;   //开启T1中断
+ 393   4            }
+ 394   3          }else{
+ 395   3            stop();
+ 396   3            current_turn_config = 0;
+ 397   3          }
+ 398   2          current_turn_config++;
+ 399   2          set_display(current_turn_config);
+ 400   2        }
+ 401   1      }
+ 402          
+ 403          void wait() //暂停
+ 404          {
+ 405   1        TR1 = 0;
+ 406   1        TR0 = 0;
+ 407   1        time = 0;
+ 408   1        tune_time = 0;
+ 409   1        runtime = 0;
+ 410   1        pro_left = 0;
+ 411   1        pro_right = 0;
+ 412   1        IN1_1 = IN1_2 = IN2_1 = IN2_2 = 0;
+ 413   1      }
+ 414          /**
+ 415           *    循迹1、2、3、4 对应 左、左中、右中、右
+ 416           *    地面为白色时，灯亮，端口电平->低
+ 417           *    地面为黑色时，灯灭，端口电平->高
+ 418           *    左边灯灭，
+ 419           */
+ 420          void infrared() //循迹
+ 421          {
+ 422   1        //四灯全灭,可能遇到十字路口
+ 423   1        if(XUNJI_1 && XUNJI_2 && XUNJI_3 && XUNJI_4)
+ 424   1          crossroad();
+ 425   1        //严重偏右
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 12:00:34 PAGE 8   
 
- 426   1        else if(XUNJI_4)
- 427   1          turn_right_max();
- 428   1        //中间
- 429   1        else if(XUNJI_2 && XUNJI_3)
- 430   1          straight();
- 431   1        //偏右 (注：在严重偏右后面，即不发生严重偏右)
- 432   1        else if(XUNJI_2)
- 433   1          turn_left();
- 434   1        //偏左 (注：在严重偏左后面，即不发生严重偏左)
- 435   1        else if(XUNJI_3)
- 436   1          turn_right();
- 437   1        else
- 438   1          straight();
- 439   1          
- 440   1      }
- 441          
- 442          // PWM 输出
- 443          //电机输出函数
- 444          void output()
- 445          {
- 446   1        if(time > 19)
- 447   1        {
- 448   2          time = 0;
- 449   2          // 直行
- 450   2          IN1_1 =1; IN2_1 = 1;
- 451   2          IN1_2 =0; IN2_2 = 0;
- 452   2          // 计时器 20*100us = 2 ms
- 453   2          // 清零防止 tune_time > runtime 导致模式不能切换 
- 454   2          if(runtime++==0)tune_time=0;
- 455   2        }
- 456   1        
- 457   1        if(time == pro_left)  IN1_1 = 0;
- 458   1        if(time == pro_right) IN2_1 = 0;
- 459   1      }
- 460          
- 461          void set_display(unsigned char digit){
- 462   1        display = segdata [digit%10];
- 463   1      }
- 464          
- 465          void set_display_now(){
- 466   1        A=BX=C=D=E=F=G=0;
- 467   1        A = display&0x01;
- 468   1        BX = display&0x02;
- 469   1        C = display&0x04;
- 470   1        D = display&0x08;
- 471   1        E = display&0x10;
- 472   1        F = display&0x20;
- 473   1        G = display&0x40;
- 474   1      }
- 475          
- 476          // 读取预设参数，快速设置参数
- 477          void load_time_config(char idx){
- 478   1        current_time_config_index = idx;
- 479   1        current_time_config = &speed_level_configs + current_time_config_index;
- 480   1        set_display(current_time_config_index+1);
- 481   1      }
- 482          
- 483          // 检测轮子状态
- 484          void get_wheel_steps(){
- 485   1        static unsigned int last_left = 1, last_right = 1;
- 486   1        if(CESU_1 != last_left){left_steps++; last_left=CESU_1;} 
- 487   1        if(CESU_2 != last_right){set_display(right_steps++); last_right=CESU_2;} 
-C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 11:43:41 PAGE 9   
+ 426   1        else if(XUNJI_1)
+ 427   1          turn_left_max();
+ 428   1        //严重偏左
+ 429   1        else if(XUNJI_4)
+ 430   1          turn_right_max();
+ 431   1        //中间
+ 432   1        else if(XUNJI_2 && XUNJI_3)
+ 433   1          straight();
+ 434   1        //偏右 (注：在严重偏右后面，即不发生严重偏右)
+ 435   1        else if(XUNJI_2)
+ 436   1          turn_left();
+ 437   1        //偏左 (注：在严重偏左后面，即不发生严重偏左)
+ 438   1        else if(XUNJI_3)
+ 439   1          turn_right();
+ 440   1        else
+ 441   1          straight();
+ 442   1          
+ 443   1      }
+ 444          
+ 445          // PWM 输出
+ 446          //电机输出函数
+ 447          void output()
+ 448          {
+ 449   1        if(time > 19)
+ 450   1        {
+ 451   2          time = 0;
+ 452   2          // 直行
+ 453   2          IN1_1 =1; IN2_1 = 1;
+ 454   2          IN1_2 =0; IN2_2 = 0;
+ 455   2          // 计时器 20*100us = 2 ms
+ 456   2          // 清零防止 tune_time > runtime 导致模式不能切换 
+ 457   2          if(runtime++==0)tune_time=0;
+ 458   2        }
+ 459   1        
+ 460   1        if(time == pro_left)  IN1_1 = 0;
+ 461   1        if(time == pro_right) IN2_1 = 0;
+ 462   1      }
+ 463          
+ 464          void set_display(unsigned char digit){
+ 465   1        display = segdata [digit%10];
+ 466   1      }
+ 467          
+ 468          void set_display_now(){
+ 469   1        A=BX=C=D=E=F=G=0;
+ 470   1        A = display&0x01;
+ 471   1        BX = display&0x02;
+ 472   1        C = display&0x04;
+ 473   1        D = display&0x08;
+ 474   1        E = display&0x10;
+ 475   1        F = display&0x20;
+ 476   1        G = display&0x40;
+ 477   1      }
+ 478          
+ 479          // 读取预设参数，快速设置参数
+ 480          void load_time_config(char idx){
+ 481   1        current_time_config_index = idx;
+ 482   1        current_time_config = &speed_level_configs + current_time_config_index;
+ 483   1        set_display(current_time_config_index+1);
+ 484   1      }
+ 485          
+ 486          // 检测轮子状态
+ 487          void get_wheel_steps(){
+C51 COMPILER V9.57.0.0   XUNJI                                                             07/01/2018 12:00:34 PAGE 9   
 
- 488   1      }
+ 488   1        static unsigned int last_left = 1, last_right = 1;
+ 489   1        if(CESU_1 != last_left){left_steps++; last_left=CESU_1;} 
+ 490   1        if(CESU_2 != last_right){set_display(right_steps++); last_right=CESU_2;} 
+ 491   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1179    ----
-   CONSTANT SIZE    =    110    ----
+   CODE SIZE        =   1173    ----
+   CONSTANT SIZE    =    112    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =     28       4

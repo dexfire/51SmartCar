@@ -70,15 +70,17 @@ code struct time_config speed_level_configs[] = {
 };
 
 code struct schdule_config schdule_configs[] = {
+	{1,1},
+	{0,0},
+	{0,1},
 	{2,0},	// 很好
 	{2,1},
 	{5,0},
 	{5,1},
+
 	// 不稳定配置
-	{4,0},
 	{2,1},
 	{3,1},
-	{4,1},
 };
 
 unsigned char turn_configs[] = {
@@ -230,6 +232,8 @@ void init()
 	IN2_1 = 0;
 	IN2_2 = 0;
 	current_time_config = &speed_level_configs[0];
+	mode_low = schdule_configs[current_schdule_config].adjust_time_config;
+	mode_high = schdule_configs[current_schdule_config].straight_time_config;
 	//eeprom_init();
 	set_display(0);
 }
@@ -244,8 +248,8 @@ void straight() //走直线
 		}
 			load_time_config(mode_high);
 	}
-		pro_left  = (*current_time_config).lstraight;
-		pro_right = (*current_time_config).rstraight;
+	pro_left  = (*current_time_config).lstraight;
+	pro_right = (*current_time_config).rstraight;
 }
 
 void turn_left() //左修正

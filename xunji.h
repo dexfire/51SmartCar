@@ -15,8 +15,7 @@
 
 //  1000 is ok! slow!
 //  800 also ok slow
-// 350 is ok
-#define ADJUST_TIME_LONG 350
+#define ADJUST_TIME_LONG 600
 
 sbit GUAN_1=P1^4;
 sbit GUAN_2=P1^5;
