@@ -66,13 +66,14 @@ code struct time_config speed_level_configs[] = {
 	// 尝试再次降低修正幅度   效果还可以   稳定性差
 	{13,13,  4,7,2,7, 7,4,7,2,12000,12000 },
 
-	{6,6,  1,5,0,5, 5,1,5,0,12000,12000 },
+	{6,6,  1,4,0,4, 4,1,4,0,12000,12000 },
 };
 
 code struct schdule_config schdule_configs[] = {
 	{2,0},	// 很好
 	{2,1},
 	{5,0},
+	{5,1},
 	// 不稳定配置
 	{4,0},
 	{2,1},
@@ -238,12 +239,13 @@ void straight() //走直线
 	// 切换配置
 	// 由于比较耗时，所以判断一下当前模式是值得的
 	if(runtime > tune_time){
-		if(current_time_config_index!=mode_high)
+		if(current_time_config_index!=mode_high){
+
+		}
 			load_time_config(mode_high);
-	}else{
+	}
 		pro_left  = (*current_time_config).lstraight;
 		pro_right = (*current_time_config).rstraight;
-	}
 }
 
 void turn_left() //左修正

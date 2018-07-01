@@ -11,10 +11,12 @@
 #define TIMER0 50
 // 修正方向时的等待时间，单位2ms
 
-// 800 1000 is ok! slow!
-// 600 800 also ok slow
 #define ADJUST_TIME_SHORT 400
-#define ADJUST_TIME_LONG 550
+
+//  1000 is ok! slow!
+//  800 also ok slow
+// 350 is ok
+#define ADJUST_TIME_LONG 350
 
 sbit GUAN_1=P1^4;
 sbit GUAN_2=P1^5;
